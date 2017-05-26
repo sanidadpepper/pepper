@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.contrib.auth.models import User
 from CaninoApp.apps.base.models import *
 from django import forms

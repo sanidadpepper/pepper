@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 from django.contrib.messages.views import SuccessMessageMixin
 from CaninoApp.apps.users.forms import SignupForm
 from django.core.urlresolvers import reverse
