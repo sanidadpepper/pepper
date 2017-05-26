@@ -1,0 +1,12 @@
+{% extends 'layouts/index.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+	<div class="mainContent text-center" style="padding-bottom: 15px"><br>
+		<img src="{% static 'img/error.png' %}" width="130" alt="img"/>
+		<h1>¡Oooops! Ha ocurido un error.</h1>
+		<h3>Parece que la página que intentas ingresar no existe.</h3>
+		<a href="{% url 'inicio' %}" class="btn btn-primary">Volver al inicio</a>
+	</div>
+{% endblock %}

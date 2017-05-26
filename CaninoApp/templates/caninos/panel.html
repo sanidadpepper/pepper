@@ -1,0 +1,40 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+<div class="intro-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="intro-message">
+					<h3><b>Lista de mis caninos</b> <a href="{% url 'crear-canino' %}" class="btn btn-success">Agregar canino</a></h3>
+					{% for canino in user.canino_set.all %}
+						<div class="row">
+							<div class="col-md-11">
+								<a href="{% url 'detail-canino' canino.pk %}">
+									<div class="list-item">
+										<div class="row">
+											<div class="col-md-8">
+												{{ canino }}
+											</div>
+											<div class="col-md-4">
+												<b>Raza: </b>{{ canino.raza_canino }}
+											</div>
+										</div>
+									</div>
+								</a>
+							</div>
+							<div class="col-md-1">
+								<a href="{% url 'edit-canino' canino.pk %}" class="btn btn-default">
+									<i class="glyphicon glyphicon-pencil"></i>
+								</a>
+							</div>
+						</div>
+					{% empty %}
+						<p><b>No hay registro de tus caninos.</b> Ingresa <a href="{% url 'crear-canino' %}">aquí</a> para registrarlos</p>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

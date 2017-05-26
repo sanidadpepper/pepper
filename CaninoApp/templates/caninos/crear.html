@@ -1,0 +1,31 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+<div class="intro-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="intro-message">
+					<h3><b>Sistema de información de registro y control para los perros potencialmente peligrosos</b></h3>
+					<div class="row">
+						<form role="form" action="{{ url }}" method="POST">
+							{% csrf_token %}
+							{% for forms in form %}
+								<div class="form-group col-md-12">
+									<label><b>{{ forms.label }}</b></label>
+									{{ forms }}
+									<p class="text-danger">{{ forms.errors }}</p>
+								</div>
+							{% endfor %}
+							<div class="form-group col-md-12 text-center">
+								<input type="submit" class="btn btn-success" value="Guardar canino">
+								<a href="{% url 'panel' %}" class="btn btn-default">Volver</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

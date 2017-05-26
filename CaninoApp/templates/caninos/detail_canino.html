@@ -1,0 +1,55 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+<div class="intro-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="intro-message">
+					<h2 class="text-center">Canino <b>{{ object }}</b></h2>
+					<div class="row">
+						<div class="col-md-6">
+							<h3><b>Raza: </b>{{ object.raza_canino }}</h3>
+							<h3><b>Sexo: </b>{{ object.sexo_canino }}</h3>
+							<h3><b>Descripción:</b></h3>
+							{{ object.descripcion_canino|safe }}
+						</div>
+						<div class="col-md-6">
+							<h3><b>Fecha de nacimiento: </b>{{ object.fecha_nacimiento }}</h3>
+							<h3><b>Color: </b>{{ object.color_canino }}</h3>
+							<h3><b>Ocupaciones:</b> {% for ocupacion in object.ocupaciones.all %}<label class="label label-primary">{{ ocupacion }}</label> {% empty %}No hay ocupaciones agregadas{% endfor %}</h3>
+						</div>
+					</div>
+					<div class="text-center">
+						<a href="{% url 'add-documento' object.pk %}" class="btn btn-success">Agregar documento</a>
+						<a href="{% url 'panel' %}" class="btn btn-default">Volver</a>
+					</div>
+				</div>
+				{% for documento in object.registrocanino_set.all %}
+					<div class="intro-message row">
+						<div class="col-md-6">
+							<p><b>Fecha de publicación: </b>{{ documento.fecha_registro }}</p>
+							<p>{{ documento.detalle_registro|safe }}</p>
+						</div>
+						<div class="col-md-6">
+							<ul class="list-group">
+								{% for fichero in documento.registrocaninodocumento_set.all %}
+									<li class="list-group-item">
+										<a href="/static/{{ fichero.documento }}" target="_blank">{{ fichero }}</a>
+									</li>
+								{% empty %}
+									<li class="list-group-item">No hay documentos agregados</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				{% empty %}
+					<div class="intro-message">
+						<p><b>No hay registro documentos del canino.</b></p>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'layouts/index.html' %}
+
+{% block content %}
+<div class="intro-header">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-6">
+				<div class="intro-message">
+					<h3><b>Sistema de información de registro y control para los perros potencialmente peligrosos</b></h3>
+					<p>Regístrate en el sistema de información</p>
+					<form role="form" action="{% url 'inicio' %}" method="POST">
+						{% csrf_token %}
+						{% for forms in form %}
+							<div class="form-group">
+								<label>{{ forms.label }}</label>
+								{{ forms }}
+								{{ forms.errors }}
+							</div>
+						{% endfor %}
+						<div class="form-group text-center">
+							<input type="submit" class="btn btn-success" value="Registrarme">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock content %}
