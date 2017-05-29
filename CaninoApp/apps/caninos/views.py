@@ -1,7 +1,12 @@
 # -*- encoding: utf-8 -*-
+from django.forms.formsets import formset_factory, BaseFormSet
 from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, render_to_response
+from django.views.decorators.csrf import csrf_exempt
+from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.template import RequestContext
 from django.views.generic import *
 from .models import *
 from .forms import *
@@ -58,20 +63,39 @@ class PanelUsuarioView(SuccessMessageMixin, CreateView):
 	def get_success_url(self):
 		return reverse('panel')
 
-class CaninoDocumentoView(SuccessMessageMixin, FormView):
-	template_name = template_dir+'documento_add.html'
-	success_message = 'Documento agregado'
-	form_class = DocumentoForm
+@csrf_exempt
+def form_add_document_canino(request, pk):
+	data = {}
 
-	def get_context_data(self, **kwargs):
-		context = super(CaninoDocumentoView, self).get_context_data(**kwargs)
-		context['title'] = 'Documento'
-		context['pk'] = self.kwargs['pk']
-		return context
+	class RequiredFormSet(BaseFormSet):
+		def __init__(self, *args, **kwargs):
+			super(RequiredFormSet, self).__init__(*args, **kwargs)
+			for form in self.forms:
+				form.empty_permitted = False
 
-	def form_valid(self, form):
-		form.save_data(self.kwargs['pk'])
-		return super(CaninoDocumentoView, self).form_valid(form)
+	RegistroCaninoDocumentoFormSet = formset_factory(RegistroCaninoDocumentoForm, max_num = 10, formset = RequiredFormSet)
+	if request.method == 'POST':
+		registro_canino_form = RegistroCaninoForm(request.POST)
+		registro_canino_documento_form = RegistroCaninoDocumentoFormSet(request.POST, request.FILES or None)
+		if registro_canino_form.is_valid():
+			registro_canino = registro_canino_form.save(commit = False)
+			registro_canino.canino = Canino.objects.get(pk = pk)
+			registro_canino.save()
+			for form in registro_canino_documento_form.forms:
 
-	def get_success_url(self):
-		return reverse('detail-canino', kwargs = {'pk': self.kwargs['pk']})
+				registro_canino_documento = form.save(commit = False)
+				if registro_canino_documento.nombre_documento != '':
+					registro_canino_documento.registro_canino = registro_canino
+					registro_canino_documento.save()
+		return HttpResponseRedirect(reverse('detail-canino', kwargs = {'pk': pk}))
+	else:
+		registro_canino_form = RegistroCaninoForm()
+		registro_canino_documento_form = RegistroCaninoDocumentoFormSet()
+	c = {
+		'registro_canino_form': registro_canino_form,
+		'registro_canino_documento_form': registro_canino_documento_form
+	}
+	c.update(csrf(request))
+	data['pk'] = pk
+	data['c'] = c
+	return render_to_response(template_dir+'documento_add.html', data)

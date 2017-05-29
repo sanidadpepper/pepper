@@ -24,15 +24,15 @@ class Canino(models.Model):
 class RegistroCanino(models.Model):
 	fecha_registro = models.DateField(auto_now = True)
 	canino = models.ForeignKey(Canino)
-	detalle_registro = models.CharField(max_length = 100)
+	detalle_registro = models.CharField(max_length = 200)
 
 	def __str__(self):
 		return str(self.fecha_registro)
 
 class RegistroCaninoDocumento(models.Model):
 	registro_canino = models.ForeignKey(RegistroCanino)
-	nombre_documento = models.CharField(max_length = 40)
-	documento = models.FileField(upload_to = 'files')
+	nombre_documento = models.CharField(max_length = 40, blank = True, null = True)
+	documento = models.FileField(upload_to = 'files', blank = True, null = True)
 
 	def __str__(self):
 		return self.nombre_documento

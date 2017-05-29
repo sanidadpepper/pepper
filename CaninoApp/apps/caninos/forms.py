@@ -10,9 +10,9 @@ class CaninoForm(forms.ModelForm):
 		fields = '__all__'
 		exclude = ('propietario_canino',)
 		widgets = {
-			'nombre_canino': forms.TextInput(attrs = {'class': 'form-control','required': True}),
-			'fecha_nacimiento': forms.TextInput(attrs = {'class': 'form-control date','required': True}),
-			'color_canino': forms.TextInput(attrs = {'class': 'form-control','required': True}),
+			'nombre_canino': forms.TextInput(attrs = {'class': 'form-control',' required': True}),
+			'fecha_nacimiento': forms.TextInput(attrs = {'class': 'form-control date', 'required': True}),
+			'color_canino': forms.TextInput(attrs = {'class': 'form-control', 'required': True}),
 			'descripcion_canino': forms.Textarea(),
 			'ocupaciones': forms.CheckboxSelectMultiple()
 		}
@@ -30,5 +30,29 @@ class CaninoForm(forms.ModelForm):
 		self.fields['raza_canino'].widget.attrs.update({'required': True, 'class': 'form-control'})
 		self.fields['sexo_canino'].widget.attrs.update({'required': True, 'class': 'form-control'})
 
-class DocumentoForm(forms.Form):
-	detalle = forms.CharField(label = 'Detalle', widget = forms.Textarea())
+class RegistroCaninoForm(forms.ModelForm):
+
+	class Meta:
+		model = RegistroCanino
+		fields = '__all__'
+		exclude = ('canino',)
+		widgets = {
+			'detalle_registro': forms.Textarea()
+		}
+		labels = {
+			'detalle_registro': 'Detalle del registro'
+		}
+
+class RegistroCaninoDocumentoForm(forms.ModelForm):
+
+	class Meta:
+		model = RegistroCaninoDocumento
+		fields = '__all__'
+		exclude = ('registro_canino',)
+		widgets = {
+			'nombre_documento': forms.TextInput(attrs = {'class': 'form-control'})
+		}
+		labels = {
+			'nombre_documento': 'Nombre del documento',
+			'documento': 'Archivo'
+		}
